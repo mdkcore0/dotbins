@@ -3,22 +3,22 @@
 action=${1:-hybrid}
 delay=3
 
-command='pm-suspend-hybrid'
+subcommand="hybrid-sleep"
 case $action in
     hybrid)
         ;;
     suspend)
-        command='pm-suspend'
+        subcommand="suspend"
         ;;
     hibernate)
-        command='pm-hibernate'
+        subcommand="hibernate"
         ;;
     lock-only)
-        command=''
+        subcommand=''
         ;;
     *)
         echo "action '$action' not recognized; just locking and clearing"
-        command=''
+        subcommand=''
         ;;
 esac
 
@@ -31,8 +31,8 @@ DISPLAY=$display xlock -mode blank&
 # clear cached gpg password
 echo RELOADAGENT | gpg-connect-agent
 
-if [ -n "$command" ]
+if [ -n "$subcommand" ]
 then
     sleep $delay
-    sudo "$command"
+    loginctl "$subcommand"
 fi
